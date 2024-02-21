@@ -39,8 +39,8 @@
 
 ![JavaScript Badge](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000&style=flat)
 ![GitHub stars](https://img.shields.io/github/stars/sebascm-dev/javascript-100-proyectos)
-![GitHub issues](https://img.shields.io/github/issues/sebascm-dev/javascript-100-proyectos)
 ![GitHub forks](https://img.shields.io/github/forks/sebascm-dev/javascript-100-proyectos)
+![GitHub issues](https://img.shields.io/github/issues/sebascm-dev/javascript-100-proyectos)
 ![GitHub PRs](https://img.shields.io/github/issues-pr/sebascm-dev/javascript-100-proyectos)
 ![Astro Badge](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=fff&style=flat)
 
