@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link
+        rel="shortcut icon"
+        href="favicon.svg"
+        type="image/x-icon"
+    >
+
+    <title>Countdown - VELADA DEL AÑO 4</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .grid {
+            position: absolute;
+            inset: 0;
+            height: 100%;
+            width: 100%;
+            background-image: linear-gradient(to right, #80808012 1px, transparent 1px),
+                linear-gradient(to bottom, #80808012 1px, transparent 1px);
+            background-size: 24px 24px;
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .container h1 {
+            font-size: 64px;
+            font-weight: 600;
+            color: #333333;
+            text-align: center;
+
+            & span {
+                color: yellow;
+                text-shadow:
+                    0 0 5px #00000070,
+                    0 0 10px #ffff3370,
+                    0 0 15px #ffff3370,
+                    0 0 20px #ffdd0070,
+                    0 0 30px #ffdd0070,
+                    0 0 40px #ffdd0070;
+                text-decoration: underline;
+                ;
+            }
+        }
+
+        .container h2 {
+            font-size: 46px;
+            font-weight: 600;
+            color: #333333;
+            text-align: center;
+        }
+
+        .container-countdown {
+            display: flex;
+            flex-direction: row;
+            gap: 4rem;
+            color: #333333;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .countdown {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 128px;
+        }
+
+        .countdown-num {
+            font-size: 128px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .container-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        button {
+            border: none;
+            border-bottom: 2px solid #333333;
+            background-color: transparent;
+            padding: 0.5rem;
+            font-size: 16px;
+            color: #333333;
+            margin-top: 1rem;
+            transition: border-color 0.3s ease;
+            width: 200px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            border: 1px solid #333333;
+            color: #333333;
+            font-size: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.5s ease;
+        }
+
+        button:hover {
+            outline: none;
+            border: 1px solid rgb(150, 150, 19);
+            background-color: rgba(144, 144, 0, 0.137);
+        }
+
+        /* Estilos responsive para dispositivos móviles */
+        @media (max-width: 768px) {
+            .container h1 {
+                font-size: 48px;
+            }
+
+            .container h2 {
+                font-size: 32px;
+            }
+
+            .container-countdown {
+                flex-direction: row;
+                gap: 2rem;
+            }
+
+            .countdown {
+                width: 64px;
+            }
+
+            .countdown-num {
+                font-size: 52px;
+            }
+
+            .countdown-text {
+                font-size: 12px;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            button {
+                width: 80%;
+                /* Reducir el ancho de los elementos del formulario */
+                max-width: 300px;
+                /* Establecer un ancho máximo */
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="grid"></div>
+
+    <section class="container">
+        <h1>COUNTDOWN WITH <span>JAVASCRIPT</span></h1>
+        <div>
+            <form
+                id="countdownForm"
+                class="container-form"
+            >
+                <input
+                    type="text"
+                    id="countdownTitle"
+                    placeholder="Title Countdown"
+                    required
+                >
+                <input
+                    type="date"
+                    required
+                >
+                <button type="submit">Start Countdown</button>
+            </form>
+        </div>
+
+        <h2 id="countdownTitleDisplay"></h2>
+        <div
+            data-date=''
+            class="container-countdown"
+        >
+            <div class="countdown">
+                <span
+                    data-days
+                    class="countdown-num"
+                >00</span>
+                <span class="countdown-text">Days</span>
+            </div>
+
+            <div class="countdown">
+                <span
+                    data-hours
+                    class="countdown-num"
+                >00</span>
+                <span class="countdown-text">Hours</span>
+            </div>
+
+            <div class="countdown">
+                <span
+                    data-minutes
+                    class="countdown-num"
+                >00</span>
+                <span class="countdown-text">Minutes</span>
+            </div>
+
+            <div class="countdown">
+                <span
+                    data-seconds
+                    class="countdown-num"
+                >00</span>
+                <span class="countdown-text">Seconds</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const $countdownForm = document.getElementById('countdownForm');
+            const $countdownTitleInput = document.getElementById('countdownTitle');
+            const $countdownTitleDisplay = document.getElementById('countdownTitleDisplay');
+            const $dateInput = document.querySelector('input[type="date"]');
+            const $countdownContainer = document.querySelector('.container-countdown');
+
+            // Función para obtener el objeto guardado en localStorage
+            function getStoredData() {
+                return JSON.parse(localStorage.getItem('countdownData'));
+            }
+
+            // Función para guardar el objeto en localStorage
+            function storeData(data) {
+                localStorage.setItem('countdownData', JSON.stringify(data));
+            }
+
+            // Función para borrar todas las entradas del localStorage
+            function clearLocalStorage() {
+                localStorage.removeItem('countdownData');
+            }
+
+            // Función para inicializar el contador
+            function iniciarContador(timestamp, title) {
+                const $countdown = document.querySelector('[data-date]');
+                if (!$countdown) return;
+
+                const $days = $countdown.querySelector('[data-days]');
+                const $hours = $countdown.querySelector('[data-hours]');
+                const $minutes = $countdown.querySelector('[data-minutes]');
+                const $seconds = $countdown.querySelector('[data-seconds]');
+
+                const date = new Date(+timestamp).getTime();
+
+                function actualizarContador(params) {
+                    const now = Date.now();
+                    const diff = date - now;
+
+                    const SECOND = 1000;
+                    const MINUTE = SECOND * 60;
+                    const HOUR = MINUTE * 60;
+                    const DAY = HOUR * 24;
+
+                    const days = Math.floor(diff / DAY);
+                    const hours = Math.floor((diff % DAY) / HOUR);
+                    const minutes = Math.floor((diff % HOUR) / MINUTE);
+                    const seconds = Math.floor((diff % MINUTE) / SECOND);
+
+                    $days.innerHTML = days.toString().padStart(2, '0');
+                    $hours.innerHTML = hours.toString().padStart(2, '0');
+                    $minutes.innerHTML = minutes.toString().padStart(2, '0');
+                    $seconds.innerHTML = seconds.toString().padStart(2, '0');
+                }
+
+                setInterval(actualizarContador, 1000);
+                actualizarContador();
+
+                // Mostrar el título
+                $countdownTitleDisplay.textContent = title;
+            }
+
+            // Evento para manejar el envío del formulario
+            $countdownForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Evitar el envío del formulario
+
+                // Capturar el título ingresado
+                const countdownTitle = $countdownTitleInput.value;
+
+                const selectedDate = new Date($dateInput.value);
+                const timestamp = selectedDate.getTime();
+
+                window.location.reload()
+
+                // Guardar el timestamp y el título en localStorage
+                const data = { timestamp, title: countdownTitle };
+                storeData(data);
+
+                // Iniciar el contador con el nuevo timestamp y título
+                iniciarContador(timestamp, countdownTitle);
+            });
+
+            // Al cargar la página, comprobar si hay datos guardados en localStorage
+            const storedData = getStoredData();
+            if (storedData) {
+                // Iniciar el contador con el timestamp y título almacenados
+                iniciarContador(storedData.timestamp, storedData.title);
+            }
+        });
+    </script>
+
+
+
+
+
+
+</body>
+
+</html>
