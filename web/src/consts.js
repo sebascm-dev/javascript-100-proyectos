@@ -11,4 +11,16 @@ export const PROJECTS = [
       "Sprites"
     ]
   },
+  {
+    slug: "02-countdown",
+    title: "Countdown Form",
+    description:
+      "Cuenta regresiva donde tu marcas la fecha concreta para saber los dias que quedan",
+    learnings: [
+      "LocalStorage",
+      "EventListeners",
+      "Manipulación del DOM",
+      "Formularios HTML"
+    ]
+  },
 ]
